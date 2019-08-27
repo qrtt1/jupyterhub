@@ -92,8 +92,9 @@ async def test_home_auth(app):
 
 
 async def test_admin_no_auth(app):
-    r = await get_page('admin', app)
-    assert r.status_code == 403
+    r = await get_page('admin', app, allow_redirects=False)
+    assert r.status_code == 302
+    assert '/hub/login' in r.headers['Location']
 
 
 async def test_admin_not_admin(app):
@@ -611,7 +612,9 @@ async def test_static_files(app):
     r = await async_requests.get(ujoin(base_url, 'logo'))
     r.raise_for_status()
     assert r.headers['content-type'] == 'image/png'
-    r = await async_requests.get(ujoin(base_url, 'static', 'images', 'jupyter.png'))
+    r = await async_requests.get(
+        ujoin(base_url, 'static', 'images', 'jupyterhub-80.png')
+    )
     r.raise_for_status()
     assert r.headers['content-type'] == 'image/png'
     r = await async_requests.get(ujoin(base_url, 'static', 'css', 'style.min.css'))
