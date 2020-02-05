@@ -373,6 +373,7 @@ class BaseHandler(RequestHandler):
         cookie_id = self.get_secure_cookie(
             cookie_name, cookie_value, max_age_days=self.cookie_max_age_days
         )
+        print("_user_for_cookie", cookie_name, cookie_id)
 
         def clear():
             self.clear_cookie(cookie_name, path=self.hub.base_url)
@@ -413,7 +414,7 @@ class BaseHandler(RequestHandler):
                 print("get_current_user_token", user)
                 if user is None:
                     user = self.get_current_user_cookie()
-                    print("get_current_user_cookie", user)
+                    print("get_current_user_cookie", user, self.hub.cookie_name)
                 if user and isinstance(user, User):
                     user = await self.refresh_auth(user)
                     print("refresh_auth", user)
