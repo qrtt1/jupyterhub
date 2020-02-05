@@ -410,14 +410,13 @@ class BaseHandler(RequestHandler):
         if not hasattr(self, '_jupyterhub_user'):
             try:
                 user = self.get_current_user_token()
-                print("1")
-                print(user)
+                print("get_current_user_token", user)
                 if user is None:
-                    print("2")
-                    print(user)
                     user = self.get_current_user_cookie()
+                    print("get_current_user_cookie", user)
                 if user and isinstance(user, User):
                     user = await self.refresh_auth(user)
+                    print("refresh_auth", user)
                 self._jupyterhub_user = user
             except Exception:
                 # don't let errors here raise more than once
